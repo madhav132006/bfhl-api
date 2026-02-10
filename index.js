@@ -7,8 +7,16 @@ const app = express();
 app.use(bodyParser.json());
 
 // Configuration
-const OFFICIAL_EMAIL = process.env.OFFICIAL_EMAIL || "your_email@chitkara.edu.in";
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const OFFICIAL_EMAIL = process.env.OFFICIAL_EMAIL || "madhav1336.be23@chitkara.edu.in";
+
+// Test API key first
+let genAI;
+try {
+    genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    console.log('Gemini client initialized successfully');
+} catch (error) {
+    console.error('Failed to initialize Gemini client:', error.message);
+}
 
 // Helper Functions
 const getFibonacci = (n) => {
@@ -59,12 +67,19 @@ app.post('/bfhl', async (req, res) => {
                 break;
             case 'AI': 
                 try {
-                    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+                    console.log('API Key exists:', !!process.env.GEMINI_API_KEY);
+                    console.log('API Key length:', process.env.GEMINI_API_KEY?.length);
+                    
+                    // Try the correct model names for current Gemini API
+                    const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
                     const result = await model.generateContent(`Answer in one word: ${input}`);
                     data = result.response.text().trim();
                 } catch (aiError) {
-                    // Fallback to a simple response if AI fails
-                    data = "AI service unavailable";
+                    return res.status(500).json({ 
+                        "is_success": false, 
+                        "official_email": "madhav1336.be23@chitkara.edu.in", 
+                        "error_details": aiError.message 
+                    });
                 }
                 break;
             default: 
