@@ -58,9 +58,14 @@ app.post('/bfhl', async (req, res) => {
                 data = findLCM(input); 
                 break;
             case 'AI': 
-                const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
-                const result = await model.generateContent(`Answer in one word: ${input}`);
-                data = result.response.text().trim();
+                try {
+                    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+                    const result = await model.generateContent(`Answer in one word: ${input}`);
+                    data = result.response.text().trim();
+                } catch (aiError) {
+                    // Fallback to a simple response if AI fails
+                    data = "AI service unavailable";
+                }
                 break;
             default: 
                 return res.status(400).json({ is_success: false, message: "Invalid key" });
