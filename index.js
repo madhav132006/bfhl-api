@@ -58,7 +58,7 @@ app.post('/bfhl', async (req, res) => {
                 data = findLCM(input); 
                 break;
             case 'AI': 
-                const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+                const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
                 const result = await model.generateContent(`Answer in one word: ${input}`);
                 data = result.response.text().trim();
                 break;
