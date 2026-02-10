@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: bfhl-api
+    env: node
+    repo: https://github.com/madhav132006/bfhl-api.git
+    rootDir: .
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
+    envVars:
+      - key: OFFICIAL_EMAIL
+        value: madhav1336.be23@chitkara.edu.in
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: PORT
+        value: 3000
+    healthCheckPath: /health
+    autoDeploy: true
